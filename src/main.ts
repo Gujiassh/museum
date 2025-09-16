@@ -8,6 +8,11 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { GUI } from "dat.gui";
 
+const musics = ["banggarang.mp3", "Shelter.mp3", "ruobani.mp3"];
+
+let currentMusicIndex = 0;
+let isPlaying = false;
+
 const gui = new GUI();
 
 const params = {
@@ -40,11 +45,10 @@ const sound = new THREE.Audio(listener);
 
 const audioLoader = new THREE.AudioLoader();
 
-audioLoader.load("/M5000008aOkA3v4X0Q.mp3", (buffer) => {
+// 初始加载音频但不自动播放
+audioLoader.load(`/${musics[currentMusicIndex]}`, (buffer) => {
   sound.setBuffer(buffer);
-  window.addEventListener("click", () => {
-    sound.play();
-  });
+  // 不自动播放，等待用户交互
 });
 
 const analyser = new THREE.AudioAnalyser(sound, 32);
@@ -160,7 +164,6 @@ function animate() {
   camera.position.y += (-mouseY - camera.position.y) * 0.5;
   camera.lookAt(scene.position);
 
-
   uniforms.u_time.value = clock.getElapsedTime();
   uniforms.u_frequency.value = analyser.getAverageFrequency();
   bloomComposer.render();
@@ -181,4 +184,48 @@ window.addEventListener("mousemove", function (e) {
   );
   uniforms.u_frequency.value = analyser.getAverageFrequency();
 });
-document.body.appendChild(renderer.domElement);
+
+// 播放/暂停按钮
+window.document.getElementById("play-pause")?.addEventListener("click", () => {
+  if (!isPlaying) {
+    sound.play();
+    isPlaying = true;
+    document.getElementById("play-pause")!.textContent = "⏸";
+  } else {
+    sound.pause();
+    isPlaying = false;
+    document.getElementById("play-pause")!.textContent = "▶";
+  }
+});
+
+// 上一首按钮
+window.document.getElementById("pre-music")?.addEventListener("click", () => {
+  currentMusicIndex--;
+  if (currentMusicIndex < 0) {
+    currentMusicIndex = musics.length - 1;
+  }
+  audioLoader.load(`/${musics[currentMusicIndex]}`, (buffer) => {
+    sound.setBuffer(buffer);
+    if (isPlaying) {
+      sound.stop(); // 先停止当前音频
+      sound.play(); // 再播放新音频
+    }
+  });
+});
+
+// 下一首按钮
+window.document.getElementById("next-music")?.addEventListener("click", () => {
+  currentMusicIndex++;
+  if (currentMusicIndex >= musics.length) {
+    currentMusicIndex = 0;
+  }
+  audioLoader.load(`/${musics[currentMusicIndex]}`, (buffer) => {
+    sound.setBuffer(buffer);
+    if (isPlaying) {
+      sound.stop(); // 先停止当前音频
+      sound.play(); // 再播放新音频
+    }
+  });
+});
+
+// 移除重复的DOM添加，已经在第28行添加过了
