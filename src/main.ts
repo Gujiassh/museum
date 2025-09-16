@@ -76,7 +76,10 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 const renderScene = new RenderPass(scene, camera);
 
 const bloomPass = new UnrealBloomPass(
-  new THREE.Vector2(window.innerWidth, window.innerHeight)
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  params.strength,
+  params.radius,
+  params.threshold
 );
 bloomPass.threshold = params.threshold;
 bloomPass.strength = params.strength;
