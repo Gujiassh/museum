@@ -40,7 +40,7 @@ const sound = new THREE.Audio(listener);
 
 const audioLoader = new THREE.AudioLoader();
 
-audioLoader.load("src/assets/voice/M5000008aOkA3v4X0Q.mp3", (buffer) => {
+audioLoader.load("/M5000008aOkA3v4X0Q.mp3", (buffer) => {
   sound.setBuffer(buffer);
   window.addEventListener("click", () => {
     sound.play();
