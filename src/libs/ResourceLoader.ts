@@ -24,7 +24,6 @@ export class ResourceLoader {
   // 加载器实例
   private gltfLoader = new GLTFLoader();
   private textureLoader = new THREE.TextureLoader();
-  private audioLoader = new THREE.AudioLoader();
   private fontLoader = new FontLoader();
 
   constructor() {
@@ -60,9 +59,7 @@ export class ResourceLoader {
           this.updateProgress(item.name);
           resolve(gltf);
         },
-        (progress) => {
-          // 可以在这里处理单个文件的进度
-        },
+        undefined,
         (error) => {
           console.error(`GLTF加载失败: ${item.name}`, error);
           reject(error);
@@ -81,9 +78,7 @@ export class ResourceLoader {
           this.updateProgress(item.name);
           resolve(texture);
         },
-        (progress) => {
-          // 纹理加载进度
-        },
+        undefined,
         (error) => {
           console.error(`纹理加载失败: ${item.name}`, error);
           reject(error);
@@ -92,24 +87,31 @@ export class ResourceLoader {
     });
   }
 
-  // 加载音频
+  // 使用原生Web Audio API加载音频
   private loadAudio(item: ResourceItem): Promise<AudioBuffer> {
     return new Promise((resolve, reject) => {
-      this.audioLoader.load(
-        item.url,
-        (audioBuffer) => {
+      // 使用原生fetch代替Three.js的AudioLoader
+      fetch(item.url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.arrayBuffer();
+        })
+        .then(arrayBuffer => {
+          // 使用Web Audio API解码音频
+          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+          return audioContext.decodeAudioData(arrayBuffer);
+        })
+        .then(audioBuffer => {
           this.resources.set(item.name, audioBuffer);
           this.updateProgress(item.name);
           resolve(audioBuffer);
-        },
-        (progress) => {
-          // 音频加载进度
-        },
-        (error) => {
+        })
+        .catch(error => {
           console.error(`音频加载失败: ${item.name}`, error);
           reject(error);
-        }
-      );
+        });
     });
   }
 
@@ -123,9 +125,7 @@ export class ResourceLoader {
           this.updateProgress(item.name);
           resolve(font);
         },
-        (progress) => {
-          // 字体加载进度
-        },
+        undefined,
         (error) => {
           console.error(`字体加载失败: ${item.name}`, error);
           reject(error);
@@ -134,11 +134,16 @@ export class ResourceLoader {
     });
   }
 
-  // 加载JSON
+  // 使用原生fetch加载JSON
   private loadJSON(item: ResourceItem): Promise<any> {
     return new Promise((resolve, reject) => {
       fetch(item.url)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
         .then(data => {
           this.resources.set(item.name, data);
           this.updateProgress(item.name);
@@ -165,7 +170,7 @@ export class ResourceLoader {
       case 'json':
         return this.loadJSON(item);
       default:
-        return Promise.reject(`不支持的资源类型: ${item.type}`);
+        return Promise.reject(new Error(`不支持的资源类型: ${item.type}`));
     }
   }
 
