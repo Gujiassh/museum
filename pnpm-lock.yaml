@@ -11,6 +11,9 @@ importers:
       three:
         specifier: ^0.180.0
         version: 0.180.0
+      ts-pattern:
+        specifier: ^5.8.0
+        version: 5.8.0
       vite-plugin-glsl:
         specifier: ^1.5.1
         version: 1.5.1(rollup@4.50.2)(vite@7.1.5)
@@ -24,6 +27,9 @@ importers:
       dat.gui:
         specifier: ^0.7.9
         version: 0.7.9
+      gsap:
+        specifier: ^3.13.0
+        version: 3.13.0
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -355,6 +361,9 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  gsap@3.13.0:
+    resolution: {integrity: sha512-QL7MJ2WMjm1PHWsoFrAQH/J8wUeqZvMtHO58qdekHpCfhvhSL4gSiz6vJf5EeMP0LOn3ZCprL2ki/gjED8ghVw==}
+
   meshoptimizer@0.22.0:
     resolution: {integrity: sha512-IebiK79sqIy+E4EgOr+CAw+Ke8hAspXKzBd0JdgEmPHiAwmvEj2S4h1rfvo+o/BnfEYd/jAOg5IeeIjzlzSnDg==}
 
@@ -389,6 +398,9 @@ packages:
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
     engines: {node: '>=12.0.0'}
+
+  ts-pattern@5.8.0:
+    resolution: {integrity: sha512-kIjN2qmWiHnhgr5DAkAafF9fwb0T5OhMVSWrm8XEdTFnX6+wfXwYOFjeF86UZ54vduqiR7BfqScFmXSzSaH8oA==}
 
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
@@ -658,6 +670,8 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
+  gsap@3.13.0: {}
+
   meshoptimizer@0.22.0: {}
 
   nanoid@3.3.11: {}
@@ -707,6 +721,8 @@ snapshots:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
+
+  ts-pattern@5.8.0: {}
 
   typescript@5.8.3: {}
 

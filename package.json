@@ -12,11 +12,13 @@
     "@types/dat.gui": "^0.7.13",
     "@types/three": "^0.180.0",
     "dat.gui": "^0.7.9",
+    "gsap": "^3.13.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2"
   },
   "dependencies": {
     "three": "^0.180.0",
+    "ts-pattern": "^5.8.0",
     "vite-plugin-glsl": "^1.5.1"
   }
 }
